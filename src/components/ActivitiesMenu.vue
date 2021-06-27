@@ -7,9 +7,9 @@
         class="Activity__Item"
         @click="setActiveLink(activity.label)"
       >
-        <button type="button" class="Activity__Btn">
+        <button type="button" class="Activity__Btn" :class="{ Selected: selectedActivity === activity.label }">
           <span class="Activity__Icon">
-            <icon-base width="30" height="30" :icon-name="activity.label" :iconColor="'#3db2f3'">
+            <icon-base width="40" height="40" :icon-name="activity.label">
               <icon-food v-if="activity.label === 'food'" />
               <icon-golf v-if="activity.label === 'golf'" />
               <icon-arts v-if="activity.label === 'arts'" />
@@ -55,6 +55,7 @@ export default {
           icon: 'art-icon',
         },
       ],
+      selectedActivity: '',
     };
   },
   mounted() {
@@ -62,6 +63,7 @@ export default {
   },
   methods: {
     setActiveLink(link) {
+      this.selectedActivity = link;
       this.$emit('active-link', link);
     },
   },
@@ -72,6 +74,7 @@ export default {
 .Activity__List {
   list-style-type: none;
   padding: 0;
+  margin-block-end: 48px;
 }
 
 .Activity__Item {
@@ -92,11 +95,40 @@ export default {
 }
 
 .Activity__Icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  padding: 6px;
+  margin-block-end: 6px;
   background-color: white;
-  padding: 16px;
   border-radius: 50%;
   border: 8px solid var(--primary-light);
-  margin-block-end: 4px;
-  position: relative;
+}
+
+.Selected > .Activity__Icon {
+  background-color: var(--primary);
+  border: 2px dotted var(--primary);
+  padding: 14px;
+  background-clip: content-box;
+}
+
+.Selected > .Activity__Icon svg {
+  color: white;
+}
+
+span:last-of-type {
+  font-size: 14px;
+}
+
+svg[aria-labelledby='food'] {
+  margin-right: -6px;
+  margin-bottom: -6px;
+}
+
+svg[aria-labelledby='golf'] {
+  margin-right: -16px;
 }
 </style>
