@@ -8,6 +8,7 @@ body {
   width: 100%;
   height: 100%;
   scroll-behavior: smooth;
+  margin: 0;
 }
 
 #app {
@@ -21,9 +22,11 @@ body {
   margin: 0 auto;
   padding: 15px;
   max-width: none;
+}
 
-  @media (min-width: 1200px) {
-    max-width: 1200px;
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1440px;
     padding: 0;
   }
 }

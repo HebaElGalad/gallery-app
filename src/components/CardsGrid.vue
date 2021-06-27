@@ -86,5 +86,6 @@ export default {
   grid-gap: 6px;
   grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
   grid-auto-rows: 240px;
+  padding-bottom: 96px;
 }
 </style>
