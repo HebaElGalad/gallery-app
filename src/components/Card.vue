@@ -6,11 +6,13 @@
       Sorry, your browser doesn't support embedded videos.
     </video>
 
-    <img v-else :src="item.photos[photoIdx]" alt="" class="Card__Media" />
+    <img v-else :src="item.photos[photoIdx]" alt="" class="Card__Media" @error="failedToLoad" />
   </div>
 </template>
 
 <script>
+import { getRandomNumber } from '@/utilities/helper';
+
 export default {
   name: 'Card',
   props: {
@@ -27,6 +29,8 @@ export default {
     return {
       photoIdx: 0,
       videoIdx: 0,
+      counter: null,
+      timer: 3, // 3 sec
     };
   },
   computed: {
@@ -45,6 +49,43 @@ export default {
     hasVideo() {
       return this.item.has_video;
     },
+    /**
+     * Check if the card has multiple photos
+     */
+    hasMultipleMedia() {
+      return !this.hasVideo && this.item.photos.length > 1;
+    },
+  },
+  mounted() {
+    if (this.hasMultipleMedia) {
+      this.counter = setInterval(() => {
+        this.updateMediaCard();
+      }, this.timer * 1000);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.counter);
+  },
+  methods: {
+    /**
+     * Update card's media randomly
+     */
+    updateMediaCard() {
+      const { photos } = this.item;
+      const mediaIdx = getRandomNumber(photos.length);
+
+      this.photoIdx = mediaIdx;
+    },
+    /**
+     * Replace broken media card with a new one
+     */
+    failedToLoad() {
+      if (this.hasMultipleMedia) {
+        this.updateMediaCard();
+      } else {
+        this.$emit('failed', this.idx);
+      }
+    },
   },
 };
 </script>
@@ -56,6 +97,7 @@ export default {
   flex-direction: column;
   overflow: hidden;
   border-radius: 8px;
+  background-color: #fafafa;
 }
 
 .Card__Media {
