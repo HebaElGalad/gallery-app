@@ -10,7 +10,8 @@
         <Spinner v-if="isFetching" />
 
         <section v-else>
-          <CardsGrid :items="items" />
+          <p v-if="error" class="Error-msg">Something went wrong. Please try again later.</p>
+          <CardsGrid v-else :items="items" />
         </section>
       </main>
     </div>
@@ -36,6 +37,7 @@ export default {
       items: [],
       dataUrl:
         'https://gist.githubusercontent.com/ReemLotfy/4ea8e4b71c4af5f1aa0e321869ea2b0d/raw/c563b15604b04e2f8d052d3d28ab1e17f63db1a0/',
+      error: false,
     };
   },
   watch: {
@@ -49,10 +51,18 @@ export default {
   methods: {
     getData() {
       this.isFetching = true;
-      this.axios.get(`${this.dataUrl}${this.activeLink}-data.json`).then(response => {
-        this.items = response.data;
-        this.isFetching = false;
-      });
+      this.axios
+        .get(`${this.dataUrl}${this.activeLink}-data.json`)
+        .then(response => {
+          this.items = response.data;
+        })
+        .catch(err => {
+          console.error(err);
+          this.error = true;
+        })
+        .finally(() => {
+          this.isFetching = false;
+        });
     },
     setActiveLink(link) {
       this.activeLink = link;
@@ -85,5 +95,11 @@ export default {
   width: 40px;
   margin: 0 auto;
   color: var(--primary);
+}
+
+.Error-msg {
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: bold;
 }
 </style>
